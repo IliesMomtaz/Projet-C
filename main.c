@@ -15,21 +15,23 @@ int main()
 
     while(statut != 'Q'){
         char result = key_pressed();
+
         if(result == 'M' || result == 'm'){ // Si pendant le jeu le joueur veut retourner dans le menu, en le remettant ici il le peut
             statut = 'M';
             menu();
             result = 0; // je remet a chaque fois a 0 pcq sinon pour le pause/play ca posait probleme
         }
-        if(statut = 'M'){
+
+        if(statut == 'M'){
             if(result == '1' || result == '2'){
                 statut = 'J';
                 printf("Le Jeu à commencer !!\n");
                 if(result == '1'){
-                    //activer le mode Fluide
+                    //activer le mode Fluide 
                     result=0;
                 }
             if(result == '2'){
-                //activer le mode Chargééééééééééééééééééééééééééééééééééééééééééééééé
+                //activer le mode Charger
                 result=0;
             }
         }
