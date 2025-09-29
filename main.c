@@ -14,48 +14,62 @@ int main()
     char statut = 'M'; // on va avoir trois états : M(Menu), J(Jouer), P(Pause) et Q(Quit)
 
     while(statut != 'Q'){
-        char result = key_pressed();
+        char resultat = key_pressed();
 
-        if(result == 'M' || result == 'm'){ // Si pendant le jeu le joueur veut retourner dans le menu, en le remettant ici il le peut
+        if(resultat == 'M' || resultat == 'm'){ // Si pendant le jeu le joueur veut retourner dans le menu, en le remettant ici il le peut
             statut = 'M';
             menu();
-            result = 0; // je remet a chaque fois a 0 pcq sinon pour le pause/play ca posait probleme
+            resultat = 0; // je remet a chaque fois a 0 pcq sinon pour le pause/play ca posait probleme
         }
 
         if(statut == 'M'){
-            if(result == '1' || result == '2'){
+            if(resultat == '1' || resultat == '2'){
                 statut = 'J';
                 printf("Le Jeu à commencer !!\n");
-                if(result == '1'){
+                if(resultat == '1'){
                     //activer le mode Fluide 
-                    result=0;
+                    printf("\033[2J\033[H");
+                    FILE *f = fopen("map.txt", "r");
+                    char ligne[256];
+                    while (fgets(ligne, sizeof(ligne), f) != NULL){
+                        printf("%s", ligne);
+                    }
+                    fclose(f);
+                    resultat=0;
                 }
-            if(result == '2'){
+            if(resultat == '2'){
                 //activer le mode Charger
-                result=0;
+                printf("\033[2J\033[H");
+                FILE *f = fopen("map.txt", "r");
+                    char ligne[256];
+                    while (fgets(ligne, sizeof(ligne), f) != NULL){
+                        printf("%s", ligne);
+                    }
+                    fclose(f);
+                resultat=0;
             }
         }
         }
 
         if(statut == 'J'){
-            if(result == 'P' || result == 'p'){
+            if(resultat == 'P' || resultat == 'p'){
                 statut = 'P';
                 printf("==========LE JEU EST EN PAUSE==========\n");
-                result=0;
+                resultat=0;
             }
         }
 
         if(statut == 'P'){
-            if(result == 'P' || result == 'p'){
+            if(resultat == 'P' || resultat == 'p'){
                 statut = 'J';
                 printf("=============LE JEU REPREND============\n");
-                result=0;
+                resultat=0;
             }
         }
         
-        if(result == 'Q' || result == 'q'){
+        if(resultat == 'Q' || resultat == 'q'){
             statut = 'Q';
-            result=0;
+            resultat=0;
         }
     }
     return 0;
