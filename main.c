@@ -4,68 +4,38 @@
 #include <string.h>
 #include <termios.h>
 #include <fcntl.h>
+
 #include "menu.h"
+#include "afficher_map.h"
+#include "game_pause.h"
+#include "jouer.h"
 
 char key_pressed();
 
 int main()
 {
-    menu();
+    affichage_menu();
     char statut = 'M'; // on va avoir trois états : M(Menu), J(Jouer), P(Pause) et Q(Quit)
-
+    int compteur = 0; //ça va servir a par exemple au bout de 60 tours de bouvle on va faire spawn une voiture ou un truc de genre
+    int temps = 0; //pour connaitre le vrai temps écoulé 
+    
     while(statut != 'Q'){
         char resultat = key_pressed();
 
         if(resultat == 'M' || resultat == 'm'){ // Si pendant le jeu le joueur veut retourner dans le menu, en le remettant ici il le peut
-            statut = 'M';
-            menu();
-            resultat = 0; // je remet a chaque fois a 0 pcq sinon pour le pause/play ca posait probleme
+            menu(&statut, resultat);
         }
-
+        
         if(statut == 'M'){
-            if(resultat == '1' || resultat == '2'){
-                statut = 'J';
-                printf("Le Jeu à commencer !!\n");
-                if(resultat == '1'){
-                    //activer le mode Fluide 
-                    printf("\033[2J\033[H");
-                    FILE *f = fopen("map.txt", "r");
-                    char ligne[256];
-                    while (fgets(ligne, sizeof(ligne), f) != NULL){
-                        printf("%s", ligne);
-                    }
-                    fclose(f);
-                    resultat=0;
-                }
-            if(resultat == '2'){
-                //activer le mode Charger
-                printf("\033[2J\033[H"); // pour nettoyer l'écran
-                FILE *f = fopen("assets-voiture.txt", "r");
-                    char ligne[256];
-                    while (fgets(ligne, sizeof(ligne), f) != NULL){
-                        printf("%s", ligne);
-                    }
-                    printf("\n");
-                    fclose(f);
-                resultat=0;
+            jouer(&statut, resultat);
             }
-        }
-        }
 
         if(statut == 'J'){
-            if(resultat == 'P' || resultat == 'p'){
-                statut = 'P';
-                printf("==========LE JEU EST EN PAUSE==========\n");
-                resultat=0;
-            }
+            game_pause(&statut, resultat, &compteur, &temps);
         }
 
         if(statut == 'P'){
-            if(resultat == 'P' || resultat == 'p'){
-                statut = 'J';
-                printf("=============LE JEU REPREND============\n");
-                resultat=0;
-            }
+            game_pause(&statut, resultat, &compteur, &temps);
         }
         
         if(resultat == 'Q' || resultat == 'q'){
@@ -102,6 +72,14 @@ char key_pressed()
 
 
 
-// Trucs à corriger : quand on la ce le programme et qu'on appui sur 1 par exemple, le chiffre apparait quand le message "Le jeu..." arrive
-// à voir si ca le refait quand y'aura la vraie interface
-// quand on appui sur q pour quitter juste enlever le pourcentage
+
+
+
+
+
+
+
+
+
+
+

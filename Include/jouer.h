@@ -1,0 +1,1 @@
+void jouer(char *statut, char resultat);
