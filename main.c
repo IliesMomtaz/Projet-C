@@ -39,12 +39,13 @@ int main()
                 }
             if(resultat == '2'){
                 //activer le mode Charger
-                printf("\033[2J\033[H");
-                FILE *f = fopen("map.txt", "r");
+                printf("\033[2J\033[H"); // pour nettoyer l'écran
+                FILE *f = fopen("assets-voiture.txt", "r");
                     char ligne[256];
                     while (fgets(ligne, sizeof(ligne), f) != NULL){
                         printf("%s", ligne);
                     }
+                    printf("\n");
                     fclose(f);
                 resultat=0;
             }
