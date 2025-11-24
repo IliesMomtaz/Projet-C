@@ -1,2 +1,2 @@
-void menu(char *statut, char resultat);
+void menu(char *statut);
 void affichage_menu(void);

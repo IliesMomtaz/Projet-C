@@ -17,14 +17,14 @@ void jouer(char *statut, char resultat){
                 if(resultat == '1'){
                     //activer le mode Fluide 
                     printf("\033[2J\033[H");
-                    printf("Le Jeu à commencer !!\n");
+                    printf("Le Jeu a commencer !!\n");
                     afficher_map();
                     resultat=0;
                 }
             if(resultat == '2'){
                 //activer le mode Charger
                 printf("\033[2J\033[H"); 
-                printf("Le Jeu à commencer !!\n");
+                printf("Le Jeu a commencer !!\n");
                 afficher_map();
                 resultat=0;
             }

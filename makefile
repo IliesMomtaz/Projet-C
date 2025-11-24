@@ -1,35 +1,35 @@
-# Compilateur
-CC = gcc
-CFLAGS = -Wall -Wextra -g -IInclude
+# =======================
+#  Makefile - Projet C
+# =======================
 
-# Fichiers sources
-SRC = main.c \
-      src/afficher_map.c \
-      src/jouer.c \
-      src/menu.c \
-      src/game_pause.c
+SRC_DIR := src
+INC_DIR := Include
 
-# Fichiers objets
-OBJ = $(SRC:.c=.o)
+CC      := gcc
+CFLAGS  := -Wall -Wextra -g -I$(INC_DIR)
 
-# Nom de l'exécutable
-EXEC = parking
+SRC := main.c \
+       $(SRC_DIR)/afficher_map.c \
+       $(SRC_DIR)/jouer.c \
+       $(SRC_DIR)/menu.c \
+       $(SRC_DIR)/game_pause.c
 
-# Règle par défaut
+OBJ := $(SRC:.c=.o)
+
+EXEC := parking
+
 all: $(EXEC)
 
-# Edition de liens
 $(EXEC): $(OBJ)
-	$(CC) $(CFLAGS) -o $(EXEC) $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
 
-# Compilation de main avec ses dépendances
-main.o: main.c Include/afficher_map.h Include/jouer.h Include/menu.h Include/game_pause.h
-	$(CC) $(CFLAGS) -c main.c -o main.o
-
-# Compilation générique pour les fichiers src/
-src/%.o: src/%.c Include/%.h
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Nettoyage
 clean:
-	rm -f $(OBJ) main.o $(EXEC)
+	rm -f $(OBJ) $(EXEC)
+
+re: clean all
+
+run: $(EXEC)
+	./$(EXEC)

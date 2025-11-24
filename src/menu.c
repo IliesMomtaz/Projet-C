@@ -18,9 +18,9 @@ void affichage_menu(void)
     printf("\n");
 }
 
-void menu(char *statut, char resultat){
+void menu(char *statut){
     (*statut) = 'M';
     affichage_menu();
-    resultat = 0; // je remet a chaque fois a 0 pcq sinon pour le pause/play ca posait probleme
+    *statut = 'M'; affichage_menu();
 }
 

@@ -11,6 +11,7 @@
 
 
 
+
 void afficher_map(void){
     FILE *f = fopen("sprite/map.txt", "r");
     if (f == NULL) {

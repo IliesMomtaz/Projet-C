@@ -15,26 +15,21 @@ char key_pressed();
 int main()
 {
     affichage_menu();
-    char statut = 'M'; // on va avoir trois états : M(Menu), J(Jouer), P(Pause) et Q(Quit)
-    int compteur = 0; //ça va servir a par exemple au bout de 60 tours de bouvle on va faire spawn une voiture ou un truc de genre
-    int temps = 0; //pour connaitre le vrai temps écoulé 
-    
+    char statut = 'M'; // on va avoir trois états : M(Menu), J(Jouer), P(Pause) et Q(Quitter)
+    int compteur = 0; //ça va servir a par exemple au bout de 60 tours de boucle on va faire spawn une voiture ou un truc de genre
+    int temps = 0; //pour connaitre le vrai temps écoulé (pour le joueur)  
+
     while(statut != 'Q'){
         char resultat = key_pressed();
-
         if(resultat == 'M' || resultat == 'm'){ // Si pendant le jeu le joueur veut retourner dans le menu, en le remettant ici il le peut
-            menu(&statut, resultat);
+            menu(&statut);
         }
         
         if(statut == 'M'){
             jouer(&statut, resultat);
             }
 
-        if(statut == 'J'){
-            game_pause(&statut, resultat, &compteur, &temps);
-        }
-
-        if(statut == 'P'){
+        if (statut == 'J' || statut == 'P') {
             game_pause(&statut, resultat, &compteur, &temps);
         }
         
