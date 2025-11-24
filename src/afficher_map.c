@@ -24,4 +24,9 @@ void afficher_map(void){
         printf("%s", ligne);
     }
     fclose(f);
+
+    //fflush(stdout);
+    //printf("\n\n appuyez sur une touche pour continuer \n");
+    //getchar();
+    //getchar();
 }
