@@ -9,7 +9,6 @@
 #include "game_pause.h"
 
 void game_pause(char *statut, char resultat, int *compteur, int *temps){
-    int statut2;
     if (*statut == 'J') {
         if (resultat == 'P' || resultat == 'p') {
             *statut = 'P';
