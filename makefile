@@ -1,7 +1,3 @@
-# =======================
-#  Makefile - Projet C
-# =======================
-
 SRC_DIR := src
 INC_DIR := Include
 
@@ -12,10 +8,10 @@ SRC := main.c \
        $(SRC_DIR)/afficher_map.c \
        $(SRC_DIR)/jouer.c \
        $(SRC_DIR)/menu.c \
-       $(SRC_DIR)/game_pause.c
+       $(SRC_DIR)/game_pause.c \
+       $(SRC_DIR)/map.c
 
-OBJ := $(SRC:.c=.o)
-
+OBJ  := $(SRC:.c=.o)
 EXEC := parking
 
 all: $(EXEC)

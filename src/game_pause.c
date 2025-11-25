@@ -7,6 +7,7 @@
 
 #include "menu.h"
 #include "game_pause.h"
+#include "afficher_map.h"
 
 void game_pause(char *statut, char resultat, int *compteur, int *temps){
     if (*statut == 'J') {
@@ -21,16 +22,17 @@ void game_pause(char *statut, char resultat, int *compteur, int *temps){
         (*compteur)++;
         if ((*compteur) % 60 == 0) (*temps)++;
         usleep(16000);
-        printf("\033[2J\033[H");
-        printf("Compteur = %d\n", *compteur);
-        printf("Temps écoulé : %d secondes\n", *temps);
+        //printf("\033[2J\033[H");
+        //printf("Compteur = %d\n", *compteur);
+        //printf("Temps écoulé : %d secondes\n", *temps);
     }
     else if (*statut == 'P') {
         // En pause : on ne bouge pas compteur/temps
         if (resultat == 'P' || resultat == 'p') {
             *statut = 'J';
             printf("\033[2J\033[H");
-            printf("=============LE JEU REPREND============\n");
+            afficher_map();
+            printf("\033[2J\033[H");
         }
     }
 }
