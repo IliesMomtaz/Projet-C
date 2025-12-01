@@ -36,4 +36,3 @@ void game_pause(char *statut, char resultat, int *compteur, int *temps){
         }
     }
 }
-
