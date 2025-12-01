@@ -2,6 +2,7 @@
 
 #include "menu.h"
 
+char key_pressed(void); 
 
 void affichage_menu(void)
 {
@@ -18,9 +19,16 @@ void affichage_menu(void)
     printf("\n");
 }
 
-void menu(char *statut){
-    (*statut) = 'M';
+char menu()
+{
     affichage_menu();
-    *statut = 'M'; affichage_menu();
+
+    char choix = 0;
+
+    while (choix != '1' && choix != '2' && choix != 'q') {
+        choix = key_pressed();
+    }
+
+    return choix;
 }
 

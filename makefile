@@ -1,31 +1,37 @@
-SRC_DIR := src
-INC_DIR := Include
+# Compilateur
+CC     = gcc
+CFLAGS = -Wall -Wextra -std=c11 -IInclude
 
-CC      := gcc
-CFLAGS  := -Wall -Wextra -g -I$(INC_DIR)
+# Dossiers
+SRC_DIR = src
 
-SRC := main.c \
-       $(SRC_DIR)/afficher_map.c \
-       $(SRC_DIR)/jouer.c \
-       $(SRC_DIR)/menu.c \
-       $(SRC_DIR)/game_pause.c \
-       $(SRC_DIR)/map.c
+# Executable
+EXEC = parking
 
-OBJ  := $(SRC:.c=.o)
-EXEC := parking
+# Fichiers sources
+SRC = $(SRC_DIR)/main.c \
+      $(SRC_DIR)/menu.c \
+      $(SRC_DIR)/jouer.c \
+      $(SRC_DIR)/game_pause.c \
+      $(SRC_DIR)/afficher_map.c \
+      $(SRC_DIR)/map.c
 
+# Fichiers objets
+OBJ = $(SRC:.c=.o)
+
+# Règle par défaut
 all: $(EXEC)
 
+# Link
 $(EXEC): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
-%.o: %.c
+# Compilation des .c en .o
+$(SRC_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Nettoyage
 clean:
-	rm -f $(OBJ) $(EXEC)
+	rm -f $(SRC_DIR)/*.o $(EXEC)
 
-re: clean all
-
-run: $(EXEC)
-	./$(EXEC)
+.PHONY: all clean

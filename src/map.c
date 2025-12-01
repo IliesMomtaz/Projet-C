@@ -6,35 +6,31 @@ char map[MAX_HAUTEUR][MAX_LARGEUR];
 int map_largeur = 0;
 int map_hauteur = 0;
 
-void chargement_map(void) {
+void chargement_map(void)
+{
     FILE *f = fopen("sprite/map.txt", "r");
-    if (f == NULL) {
-        perror("Erreur ouverture sprite/map.txt");
+    if (!f) {
+        perror("Impossible d'ouvrir map");
         return;
     }
 
-    char ligne[300];
-    int y = 0;
-    map_largeur = 0;
+    map_hauteur = 0;
 
-    while (y < MAX_HAUTEUR && fgets(ligne, sizeof(ligne), f) != NULL) {
-        // on enlève juste le '\n' de fin de ligne
-        size_t len = strcspn(ligne, "\n");
-        ligne[len] = '\0';
+    while (fgets(map[map_hauteur], MAX_LARGEUR, f) != NULL) {
+        int len = strlen(map[map_hauteur]);
 
-        // on copie TOUTE la ligne dans map[y]
-        strncpy(map[y], ligne, MAX_LARGEUR - 1);
-        map[y][MAX_LARGEUR - 1] = '\0';  // sécurité
+        // enlever le \n final
+        if (len > 0 && map[map_hauteur][len - 1] == '\n') {
+            map[map_hauteur][len - 1] = '\0';
+        }
 
-        if ((int)len > map_largeur)
-            map_largeur = (int)len;
-
-        y++;
+        map_hauteur++;
     }
 
-    map_hauteur = y;
     fclose(f);
 }
+
+
 
 
 
