@@ -1,5 +1,5 @@
 
-int is free(int x, int y, int l, int h) { //implementation de is_free (à mettre où??)
+int is_free(int x, int y, int l, int h) { //implementation de is_free (à mettre où??)
 
     for (int i = 0; i<h; i ++) {//boucle hauteur h
         for (int j = 0; j < l; j++){ //boucle largeur l
