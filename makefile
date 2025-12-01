@@ -34,4 +34,4 @@ $(SRC_DIR)/%.o: $(SRC_DIR)/%.c
 clean:
 	rm -f $(SRC_DIR)/*.o $(EXEC)
 
-.PHONY: all clean
+
