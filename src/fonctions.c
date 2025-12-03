@@ -21,11 +21,20 @@ int is_free(int x, int y, int l, int h) {
 }
 
 void free_area(int x, int y, int l, int h) {
-    // Implémentation Personne 2: définir grid[y+i][x+j] = 0
+	for (int i = x; i = x + l - 1){
+	    for (int j = y; j = y + h - 1){
+	        grid[i][j] = 0; //liberer la place
+	    }
+	}
 }
 
 void occupy_area(int x, int y, int l, int h) {
-    // Implémentation Personne 2: définir grid[y+i][x+j] = ID_VEHICULE
+
+		for (int i = x; i = x + l - 1){
+		    for (int j = y; j = y + h - 1){
+		        grid[i][j] = 1; //occuper la place
+			}
+	    }
 }
 
 VEHICLE* vehicle_create(char direction, int vitesse, char type){
