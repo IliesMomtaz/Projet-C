@@ -2,6 +2,21 @@
 #include "map.h"
 #include "fonctions.h"
 
+struct voiture
+{
+    char direction;
+    int posx;
+    int posy;
+    int vitesse;
+    char alignement;
+    char type;
+    char Carrosserie[4][30];
+    int code_couleur;
+    char etat;
+    unsigned long int tps;
+    struct voiture *NXT;
+};
+
 void move_vehicle(VEHICULE *v)
 {
     if (v == NULL) return; 

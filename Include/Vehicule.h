@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 
-// Définitions de la structure voiture
-typedef struct voiture VEHICULE;
+
+typedef struct voiture VEHICLE;
 
 struct voiture
 {
@@ -21,12 +21,10 @@ struct voiture
     struct voiture *NXT;
 };
 
-// Dimensions du véhicule (exemple)
 #define LARGEUR_VEHICULE 3
 #define HAUTEUR_VEHICULE 4
 
-// Déclarations des fonctions de mouvement (implémentées dans Structure_voiture.c)
-void move_vehicle(VEHICULE *v);
-void controler_vehicule_manuel(VEHICULE *v, char key);
+void move_vehicle(VEHICLE *v);
+void controler_vehicule_manuel(VEHICLE *v, char key);
 
 #endif
