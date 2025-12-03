@@ -16,7 +16,7 @@ SRC = $(SRC_DIR)/main.c \
       $(SRC_DIR)/game_pause.c \
       $(SRC_DIR)/afficher_map.c \
       $(SRC_DIR)/map.c \
-      $(SRC_DIR)/Structure_voiture.c \
+      $(SRC_DIR)/Voiture.c \
       $(SRC_DIR)/fonctions.c
 
 # Fichiers objets
