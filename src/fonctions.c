@@ -48,9 +48,9 @@ void occupy_area(int x, int y, int l, int h) {
 }
 
 // créer un vehicule et initialiser attributs :
-VEHICLE* create_vehicle(char direction, int vitesse, char type){
+VEHICULE* create_vehicle(char direction, int vitesse, char type){
 
-    VEHICLE* v = malloc(sizeof(VEHICLE));
+    VEHICULE* v = malloc(sizeof(VEHICLE));
     if (v == NULL) {
         return NULL;
     }
@@ -63,7 +63,6 @@ VEHICLE* create_vehicle(char direction, int vitesse, char type){
     v->alignement = 'g';
     v->etat = '1';
     v->tps = 0;
-
     v->NXT = NULL;
 
     // carrosserie
@@ -76,7 +75,7 @@ VEHICLE* create_vehicle(char direction, int vitesse, char type){
 }
 
 // ajouter un vehicule à la liste chainée :
-void add_vehicle(VEHICLE** head, VEHICLE* v){
+void add_vehicle(VEHICULE** head, VEHICULE* v){
 
     if (v == NULL) return;
     v->NXT = *head;
