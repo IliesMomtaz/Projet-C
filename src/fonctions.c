@@ -3,6 +3,7 @@
 
 extern int grid[MAX_HAUTEUR][MAX_LARGEUR];
 
+//tester si l'endroit est libre :
 int is_free(int x, int y, int l, int h) {
 
     for (int i = 0; i < h; i++) {
@@ -20,26 +21,26 @@ int is_free(int x, int y, int l, int h) {
     return 1;
 }
 
-
+//marquer libre l'endroit que la voiture vient de quitter :
 void free_area(int x, int y, int l, int h) {
 	for (int i = x; i = x + l - 1){
 	    for (int j = y; j = y + h - 1){
-	        grid[i][j] = 0; //liberer la place
+	        grid[i][j] = 0; 
 	    }
 	}
 }
 
-
+//marquer occupé l'endroit où la voiture vient d'arriver :
 void occupy_area(int x, int y, int l, int h) {
 
 	for (int i = x; i = x + l - 1){
 		    for (int j = y; j = y + h - 1){
-		        grid[i][j] = 1; //occuper la place
+		        grid[i][j] = 3; //3 
 			}
 	}
 }
 
-
+//créer un vehicule et initialiser attributs :
 VEHICLE* vehicle_create(char direction, int vitesse, char type){
 
     VEHICLE* v = malloc(sizeof());
@@ -64,7 +65,7 @@ VEHICLE* vehicle_create(char direction, int vitesse, char type){
 
 }
 
-
+//ajouter un vehicule à la liste chainée :
 void add_vehicle(VEHICLE** head, VEHICLE* v){
 
     if (v == NULL) return;
