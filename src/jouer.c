@@ -9,7 +9,10 @@
 #include "jouer.h"
 #include "afficher_map.h"
 #include "map.h"
+#include "fonctions.h"
+#include "Vehicule.h"
 
+extern VEHICULE* g_list_vehicules;
 char mode_jeu = '1';
 //quand on fait cet appel on lance une partie :
 void jouer(char *statut, char resultat)
@@ -30,15 +33,22 @@ void jouer(char *statut, char resultat)
 //fonction qui nous génére (juste ne printf pour l'instant) les voitures en fonction du mode
 static void gerer_generation_vehicules(char mode, int compteur)
 {
+    // Remplacement des printf par la vraie logique
     if (mode == '1') {
-        // mode fluide
-        if (compteur % 180 == 0) { //toutes les 180 itérations
-            printf("[DEBUG] Génération véhicule (mode FLUIDE) - compteur=%d\n", compteur);
+        if (compteur % 180 == 0) {
+            VEHICULE* new_v = create_vehicle('E', 1, 'v'); // Crée un véhicule se dirigeant vers l'Est
+            if (new_v != NULL) {
+                new_v->posx = 2; new_v->posy = 5; // Position de l'entrée (à adapter)
+                add_vehicle(&g_list_vehicules, new_v);
+            }
         }
     } else if (mode == '2') {
-        // mode chargé : spawn plus souvent
         if (compteur % 60 == 0) {
-            printf("[DEBUG] Génération véhicule (mode CHARGE) - compteur=%d\n", compteur);
+            VEHICULE* new_v = create_vehicle('E', 1, 'c');
+            if (new_v != NULL) {
+                new_v->posx = 2; new_v->posy = 5; 
+                add_vehicle(&g_list_vehicules, new_v);
+            }
         }
     }
 }
@@ -69,15 +79,28 @@ static int verifier_fin_partie(int temps)
     return 0;
 }
 
-void maj_jeu(char mode, int compteur, int temps)
+// Correcte : La fonction accepte un pointeur vers un char, un char, deux entiers
+void maj_jeu(char *statut, char mode, int compteur, int temps)
 {
     gerer_generation_vehicules(mode, compteur);
 
-    gerer_barrieres(temps);
+    // 1. Déplacement de tous les véhicules
+    VEHICULE *courant = g_list_vehicules;
+    while (courant != NULL) {
+        move_vehicle(courant);
+        courant = courant->NXT;
+    }
 
+    gerer_barrieres(temps);
     gerer_paiement();
 
     if (verifier_fin_partie(temps)) {
-        //on mettra a jours la variable statut piur que ca quitte 
+        *statut = 'M';
     }
+
+    // Réaffichage de la map et des voitures 
+    printf("\033[2J\033[H"); 
+    afficher_map();
+    
+    afficher_vehicules(g_list_vehicules);
 }

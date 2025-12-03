@@ -8,7 +8,7 @@ int is_free(int x, int y, int l, int h);
 void free_area(int x, int y, int l, int h);
 void occupy_area(int x, int y, int l, int h);
 
-VEHICLE* vehicle_create(char direction, int vitesse, char type);
-void add_vehicle(VEHICLE** head, VEHICLE* v);
+VEHICULE* create_vehicle(char direction, int vitesse, char type);
+void add_vehicle(VEHICULE** head, VEHICULE* v);
 
 #endif

@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-typedef struct voiture VEHICLE;
+typedef struct voiture VEHICULE;
 
 struct voiture
 {
@@ -24,7 +24,7 @@ struct voiture
 #define LARGEUR_VEHICULE 3
 #define HAUTEUR_VEHICULE 4
 
-void move_vehicle(VEHICLE *v);
-void controler_vehicule_manuel(VEHICLE *v, char key);
+void move_vehicle(VEHICULE *v);
+void controler_vehicule_manuel(VEHICULE *v, char key);
 
 #endif

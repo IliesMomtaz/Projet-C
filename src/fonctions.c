@@ -6,6 +6,7 @@
 #include <string.h>
 
 extern int grid[MAX_HAUTEUR][MAX_LARGEUR];
+VEHICULE* g_list_vehicules = NULL;
 
 // tester si l'endroit est libre :
 int is_free(int x, int y, int l, int h) {
@@ -50,7 +51,7 @@ void occupy_area(int x, int y, int l, int h) {
 // créer un vehicule et initialiser attributs :
 VEHICULE* create_vehicle(char direction, int vitesse, char type){
 
-    VEHICULE* v = malloc(sizeof(VEHICLE));
+    VEHICULE* v = malloc(sizeof(VEHICULE));
     if (v == NULL) {
         return NULL;
     }

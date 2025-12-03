@@ -50,7 +50,7 @@ int main(void)
 
             // Si on est bien en mode jeu on met à jour la logique
             if (statut == 'J') {
-                maj_jeu(mode_jeu, compteur, temps);
+                maj_jeu(&statut, mode_jeu, compteur, temps);     
             }
         }
     }
