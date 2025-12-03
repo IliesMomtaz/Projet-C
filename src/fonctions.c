@@ -3,7 +3,7 @@
 
 extern int grid[MAX_HAUTEUR][MAX_LARGEUR];
 
-int is_free(int x, int y, int l, int h) { 
+int is_free(int x, int y, int l, int h) {
 
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < l; j++) {
@@ -16,9 +16,10 @@ int is_free(int x, int y, int l, int h) {
                 return 0; 
             }
         }
-    }
+    }	
     return 1;
 }
+
 
 void free_area(int x, int y, int l, int h) {
 	for (int i = x; i = x + l - 1){
@@ -28,33 +29,30 @@ void free_area(int x, int y, int l, int h) {
 	}
 }
 
+
 void occupy_area(int x, int y, int l, int h) {
 
-		for (int i = x; i = x + l - 1){
+	for (int i = x; i = x + l - 1){
 		    for (int j = y; j = y + h - 1){
 		        grid[i][j] = 1; //occuper la place
 			}
-	    }
+	}
 }
+
 
 VEHICLE* vehicle_create(char direction, int vitesse, char type){
 
     VEHICLE* v = malloc(sizeof());
-	malloc ;
     
     v->posx = 0;
 	v->posy = 0;
     v->direction = direction;
     v->vitesse = vitesse;
     v->type = type;
-
     v->alignement = 'g';
     v->etat = '1';
     v->tps = 0;
-
     v-> NXT = NULL;
-
-
 
     //carroserie
     strcpy(v->Carrosserie[0], "########");
@@ -64,14 +62,12 @@ VEHICLE* vehicle_create(char direction, int vitesse, char type){
 
     return v;
 
-
 }
 
 
 void add_vehicle(VEHICLE** head, VEHICLE* v){
 
     if (v == NULL) return;
-
     v->NXT = *head;
     *head = v;
     
