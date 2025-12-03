@@ -27,3 +27,44 @@ void free_area(int x, int y, int l, int h) {
 void occupy_area(int x, int y, int l, int h) {
     // Implémentation Personne 2: définir grid[y+i][x+j] = ID_VEHICULE
 }
+
+VEHICLE* vehicle_create(char direction, int vitesse, char type){
+
+    VEHICLE* v = malloc(sizeof());
+	malloc ;
+    
+    v->posx = 0;
+	v->posy = 0;
+    v->direction = direction;
+    v->vitesse = vitesse;
+    v->type = type;
+
+    v->alignement = 'g';
+    v->etat = '1';
+    v->tps = 0;
+
+    v-> NXT = NULL;
+
+
+
+    //carroserie
+    strcpy(v->Carrosserie[0], "########");
+    strcpy(v->Carrosserie[1], "########");
+    strcpy(v->Carrosserie[2], "########");
+    strcpy(v->Carrosserie[3], "########");
+
+    return v;
+
+
+}
+
+
+void add_vehicle(VEHICLE** head, VEHICLE* v){
+
+    if (v == NULL) return;
+
+    v->NXT = *head;
+    *head = v;
+    
+}
+
