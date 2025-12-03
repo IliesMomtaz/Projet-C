@@ -35,13 +35,13 @@ void occupy_area(int x, int y, int l, int h) {
 
 	for (int i = x; i = x + l - 1){
 		    for (int j = y; j = y + h - 1){
-		        grid[i][j] = 3; //3 
+		        grid[i][j] = 3;
 			}
 	}
 }
 
 //créer un vehicule et initialiser attributs :
-VEHICLE* vehicle_create(char direction, int vitesse, char type){
+VEHICLE* create_vehicle(char direction, int vitesse, char type){
 
     VEHICLE* v = malloc(sizeof());
     
