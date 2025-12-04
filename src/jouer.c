@@ -38,7 +38,14 @@ static void gerer_generation_vehicules(char mode, int compteur)
         if (compteur % 180 == 0) {
             VEHICULE* new_v = create_vehicle('E', 1, 'v'); // Crée un véhicule se dirigeant vers l'Est
             if (new_v != NULL) {
-                new_v->posx = 2; new_v->posy = 5; // Position de l'entrée (à adapter)
+
+                new_v->posx = 2;
+                new_v->posy = 5;
+
+                int l = strlen(new_v->Carrosserie[0]);
+                int h = 4;
+                occupy_area(new_v->posx, new_v->posy, l, h);
+
                 add_vehicle(&g_list_vehicules, new_v);
             }
         }
@@ -46,7 +53,14 @@ static void gerer_generation_vehicules(char mode, int compteur)
         if (compteur % 60 == 0) {
             VEHICULE* new_v = create_vehicle('E', 1, 'c');
             if (new_v != NULL) {
-                new_v->posx = 2; new_v->posy = 5; 
+
+                new_v->posx = 2;
+                new_v->posy = 5;
+
+                int l = strlen(new_v->Carrosserie[0]);
+                int h = 4;
+                occupy_area(new_v->posx, new_v->posy, l, h);
+
                 add_vehicle(&g_list_vehicules, new_v);
             }
         }
@@ -79,12 +93,18 @@ static int verifier_fin_partie(int temps)
     return 0;
 }
 
-// Correcte : La fonction accepte un pointeur vers un char, un char, deux entiers
-void maj_jeu(char *statut, char mode, int compteur, int temps)
+// Correcte : La fonction accepte un pointeur vers un char, un char, deux entiers, et un char pour contrôle manuel
+void maj_jeu(char *statut, char mode, int compteur, int temps, char input)
 {
     gerer_generation_vehicules(mode, compteur);
 
-    // 1. Déplacement de tous les véhicules
+    // 1) Choisir une voiture "joueur" : ici, la première de la liste
+    VEHICULE *player = g_list_vehicules;
+    if (player != NULL) {
+        controler_vehicule_manuel(player, input);   // ZQSD → change v->direction
+    }
+
+    // 2) Déplacer tous les véhicules selon leur direction
     VEHICULE *courant = g_list_vehicules;
     while (courant != NULL) {
         move_vehicle(courant);
@@ -98,9 +118,8 @@ void maj_jeu(char *statut, char mode, int compteur, int temps)
         *statut = 'M';
     }
 
-    // Réaffichage de la map et des voitures 
+    // 3) Réaffichage
     printf("\033[2J\033[H"); 
     afficher_map();
-    
     afficher_vehicules(g_list_vehicules);
 }

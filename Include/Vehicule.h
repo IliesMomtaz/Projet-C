@@ -14,7 +14,7 @@ struct voiture
     int vitesse;
     char alignement;
     char type;
-    char Carrosserie[4][30];
+    char Carrosserie[4][64];
     int code_couleur;
     char etat;
     unsigned long int tps;

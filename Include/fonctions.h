@@ -10,5 +10,6 @@ void occupy_area(int x, int y, int l, int h);
 
 VEHICULE* create_vehicle(char direction, int vitesse, char type);
 void add_vehicle(VEHICULE** head, VEHICULE* v);
+int load_sprite(const char *filename, char carrosserie[4][64]);
 
 #endif

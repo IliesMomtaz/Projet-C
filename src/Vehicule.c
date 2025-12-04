@@ -1,35 +1,48 @@
 #include "Vehicule.h"
 #include "map.h"
 #include "fonctions.h"
+#include <string.h>
 
 void move_vehicle(VEHICULE *v)
 {
-    if (v == NULL) return; 
+    if (!v || v->etat != '1') return;
 
-    int next_x = v->posx; 
-    int next_y = v->posy;
+    // taille du sprite
+    int h = 4;                                   // 4 lignes
+    int l = (int)strlen(v->Carrosserie[0]);      // largeur (nb de caractères)
 
-    if (v->direction == 'E') {
-        next_x += v->vitesse;
-    } else if (v->direction == 'O') {
-        next_x -= v->vitesse;
-    } else if (v->direction == 'N') {
-        next_y -= v->vitesse;
-    } else if (v->direction == 'S') {
-        next_y += v->vitesse;
+    int dx = 0, dy = 0;
+
+    switch (v->direction) {
+        case 'E': dx = 1;  break;   // droite
+        case 'O': dx = -1; break;   // gauche
+        case 'S': dy = 1;  break;   // bas
+        case 'N': dy = -1; break;   // haut
+        default: return;
     }
 
-    if (is_free(next_x, next_y, LARGEUR_VEHICULE, HAUTEUR_VEHICULE)) {
-        free_area(v->posx, v->posy, LARGEUR_VEHICULE, HAUTEUR_VEHICULE); 
+    int new_x = v->posx + dx * v->vitesse;
+    int new_y = v->posy + dy * v->vitesse;
 
-        v->posx = next_x; 
-        v->posy = next_y;
+    // libère l’ancienne zone dans la grille
+    free_area(v->posx, v->posy, l, h);
 
-        occupy_area(v->posx, v->posy, LARGEUR_VEHICULE, HAUTEUR_VEHICULE); 
-
-    } else {
-        
+    // vérifier si la nouvelle zone est libre
+    if (is_free(new_x, new_y, l, h)) {
+        // met à jour la position
+        v->posx = new_x;
+        v->posy = new_y;
     }
+    else {
+        // ici tu peux changer de direction si tu veux “rebondir”
+        // exemple simple : faire demi-tour horizontal
+        if (v->direction == 'E') v->direction = 'O';
+        else if (v->direction == 'O') v->direction = 'E';
+        else if (v->direction == 'N') v->direction = 'S';
+        else if (v->direction == 'S') v->direction = 'N';
+    }
+    // On marque la zone finale (nouvelle ou ancienne si bloqué)
+    occupy_area(v->posx, v->posy, l, h);
 }
 
 void controler_vehicule_manuel(VEHICULE *v, char key) 
@@ -45,4 +58,7 @@ void controler_vehicule_manuel(VEHICULE *v, char key)
     } else if (key == 's' || key == 'S') {
         v->direction = 'S';
     }
+
+    printf("[DEBUG] key=%c, direction=%c\n", key, v->direction);
+
 }

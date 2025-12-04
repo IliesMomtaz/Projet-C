@@ -48,13 +48,25 @@ void chargement_map(void)
         // Ici, la Personne 1 devrait parcourir la ligne lue (map[map_hauteur])
         // pour détecter les murs/obstacles et mettre à jour la grille 'grid'
         // Exemple : if (map[map_hauteur][x] == '#') grid[map_hauteur][x] = 2; // 2 = Mur
+        
+                  for (int x = 0; x < len && x < MAX_LARGEUR; x++) {
+            char c = map[map_hauteur][x];
 
+            // à ajuster selon tes caractères :
+            // ici : ' ' = route libre, tout le reste = obstacle
+            if (c == ' ') { // ca marche il pense que tout est un mur
+                grid[map_hauteur][x] = 0;   // libre
+            } else {
+                grid[map_hauteur][x] = 2;   // mur/structure
+            }
+        }      
+        
+//        for (int x = 0; x < len; x++) {
+//            if (map[map_hauteur][x] == '█') { // et sur cette exemple la il passe à travers
+//                grid[map_hauteur][x] = 2; // 2 = Mur
+//            }        }
         map_hauteur++;
     }
 
     fclose(f);
 }
-
-
-
-

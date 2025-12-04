@@ -48,6 +48,40 @@ void occupy_area(int x, int y, int l, int h) {
     }
 }
 
+#include <stdio.h>
+#include <string.h>
+
+int load_sprite(const char *filename, char carrosserie[4][64])
+{
+    FILE *f = fopen(filename, "r");
+    if (!f) {
+        perror("Erreur ouverture sprite voiture");
+        return -1;
+    }
+
+    char ligne[128];
+    int i = 0;
+
+    while (i < 4 && fgets(ligne, sizeof(ligne), f)) {
+        // enlever le \n
+        size_t len = strcspn(ligne, "\r\n");
+        ligne[len] = '\0';
+
+        strncpy(carrosserie[i], ligne, 63);
+        carrosserie[i][63] = '\0';   // sécurité
+        i++;
+    }
+
+    // si tu n'as que 3 lignes dans le fichier, tu vides la 4e
+    while (i < 4) {
+        carrosserie[i][0] = '\0';
+        i++;
+    }
+
+    fclose(f);
+    return 0;
+}
+
 // créer un vehicule et initialiser attributs :
 VEHICULE* create_vehicle(char direction, int vitesse, char type){
 
@@ -66,12 +100,15 @@ VEHICULE* create_vehicle(char direction, int vitesse, char type){
     v->tps = 0;
     v->NXT = NULL;
 
-    // carrosserie
-    strcpy(v->Carrosserie[0], "########");
-    strcpy(v->Carrosserie[1], "########");
-    strcpy(v->Carrosserie[2], "########");
-    strcpy(v->Carrosserie[3], "########");
+    int ret = load_sprite("sprite/sprite-voiture.txt", v->Carrosserie);
+    printf("[DEBUG] ret load_sprite = %d\n", ret);
 
+    if (ret != 0) {
+        strcpy(v->Carrosserie[0], "########");
+        strcpy(v->Carrosserie[1], "########");
+        strcpy(v->Carrosserie[2], "########");
+        strcpy(v->Carrosserie[3], "########");
+    }
     return v;
 }
 
