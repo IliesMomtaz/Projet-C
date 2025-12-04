@@ -36,7 +36,7 @@ static void gerer_generation_vehicules(char mode, int compteur)
     // Remplacement des printf par la vraie logique
     if (mode == '1') {
         if (g_list_vehicules == NULL) { // Dans le mode 1 je met que 1 voiture pour l'instant sinon c'est ingérable
-            VEHICULE* new_v = create_vehicle('E', 1, 'v'); // Crée un véhicule se dirigeant vers l'Est
+            VEHICULE* new_v = create_vehicle('E', 0.5, 'v'); // Crée un véhicule se dirigeant vers l'Est
             if (new_v != NULL) {
 
                 new_v->posx = 20;
@@ -51,7 +51,7 @@ static void gerer_generation_vehicules(char mode, int compteur)
         }
     } else if (mode == '2') {
         if (compteur % 60 == 0) { // je change pas pour le mode 2, le mode 1 c'etais %180
-            VEHICULE* new_v = create_vehicle('E', 1, 'c');
+            VEHICULE* new_v = create_vehicle('E', 0.5, 'c');
             if (new_v != NULL) {
                 new_v->posx = 2; new_v->posy = 5; 
                 add_vehicle(&g_list_vehicules, new_v);
