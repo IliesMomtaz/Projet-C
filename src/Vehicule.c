@@ -3,6 +3,33 @@
 #include "fonctions.h"
 #include <string.h>
 
+//change le sprite du Vehicule en fonction de sa direction
+static void maj_sprite_direction(VEHICULE *v)
+{
+    if (!v) return;
+
+    switch (v->direction) {
+        case 'E':
+            load_sprite("sprite/sprite-voiture-e.txt", v->Carrosserie);
+            break;
+
+        case 'O':
+            load_sprite("sprite/sprite-voiture-o.txt", v->Carrosserie);
+            break;
+
+        case 'N':
+            load_sprite("sprite/sprite-voiture-n.txt", v->Carrosserie);
+            break;
+
+        case 'S':
+            load_sprite("sprite/sprite-voiture-s.txt", v->Carrosserie);
+            break;
+
+        default:
+            break;
+    }
+}
+
 void move_vehicle(VEHICULE *v)
 {
     if (!v || v->etat != '1') return;
@@ -58,7 +85,8 @@ void controler_vehicule_manuel(VEHICULE *v, char key)
     } else if (key == 's' || key == 'S') {
         v->direction = 'S';
     }
-
+    // Met à jour le sprite en fonction de la nouvelle direction
+    maj_sprite_direction(v);
     printf("[DEBUG] key=%c, direction=%c\n", key, v->direction);
 
 }

@@ -41,7 +41,7 @@ int main(void)
             }
 
             // Quitter le jeu
-            if (resultat == 'Q' || resultat == 'q') {
+            if (resultat == 'X' || resultat == 'x') {
                 statut = 'Q';
                 continue;
             }

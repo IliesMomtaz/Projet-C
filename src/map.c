@@ -54,17 +54,17 @@ void chargement_map(void)
 
             // à ajuster selon tes caractères :
             // ici : ' ' = route libre, tout le reste = obstacle
-            if (c == ' ') { // ca marche il pense que tout est un mur
-                grid[map_hauteur][x] = 0;   // libre
-            } else {
-                grid[map_hauteur][x] = 2;   // mur/structure
-            }
+//            if (c == ' ') { // ca marche il pense que tout est un mur
+  //              grid[map_hauteur][x] = 0;   // libre
+    //        } else {
+      //          grid[map_hauteur][x] = 2;   // mur/structure
+        //    }
         }      
         
-//        for (int x = 0; x < len; x++) {
-//            if (map[map_hauteur][x] == '█') { // et sur cette exemple la il passe à travers
-//                grid[map_hauteur][x] = 2; // 2 = Mur
-//            }        }
+        for (int x = 0; x < len; x++) {
+            if (strncmp(&map[map_hauteur][x], "█", 3) == 0 || strncmp(&map[map_hauteur][x], "▀", 3) == 0 || strncmp(&map[map_hauteur][x], "▄", 3) == 0) { // et sur cette exemple la il passe à travers
+                grid[map_hauteur][x] = 2; // 2 = Mur
+            }        }
         map_hauteur++;
     }
 

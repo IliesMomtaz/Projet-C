@@ -15,7 +15,7 @@ void affichage_menu(void)
     printf("\n");
     printf("[2] Activation du mode Chargé\n");
     printf("\n");
-    printf("[q] Quitter\n");
+    printf("[x] Exit\n");
     printf("\n");
 }
 
@@ -25,7 +25,7 @@ char menu()
 
     char choix = 0;
 
-    while (choix != '1' && choix != '2' && choix != 'q') {
+    while (choix != '1' && choix != '2' && choix != 'x' && choix != 'X') {
         choix = key_pressed();
     }
 
