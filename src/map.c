@@ -10,7 +10,7 @@ int map_hauteur = 0;
 
 void chargement_map(void) 
 {
-    FILE *f = fopen("sprite/map_bk3.txt", "r");
+    FILE *f = fopen("sprite/map9.txt", "r");
     if (!f) {
         perror("Impossible d'ouvrir map");
         return;
@@ -19,10 +19,11 @@ void chargement_map(void)
     map_hauteur = 0;
     map_largeur = 0;
 
-    // Reset grille
+    // 1. On remplit la grille de "2" (MURS) par défaut
+    // Comme ça, le vide est dangereux !
     for (int y = 0; y < MAX_HAUTEUR; y++) {
         for (int x = 0; x < MAX_LARGEUR; x++) {
-            grid[y][x] = 0; 
+            grid[y][x] = 2; 
         }
     }
 
@@ -37,29 +38,31 @@ void chargement_map(void)
         }
         if (len == 0) continue; 
 
-        // Copie visuelle
         if (len >= MAX_LARGEUR) len = MAX_LARGEUR - 1;
         strncpy(map[map_hauteur], ligne, len);
         map[map_hauteur][len] = '\0';
         if (len > map_largeur) map_largeur = len;
 
-        // --- LOGIQUE DE COLLISION SIMPLE ET FIABLE ---
+        // --- NOUVELLE LOGIQUE : TOUT EST UN MUR SAUF LA ROUTE ---
         for (int x = 0; x < len; x++) {
             char c = map[map_hauteur][x];
 
-            // 1. CE QUI BLOQUE (MURS SOLIDES)
-            // '#' : le contour du parking
-            // '+' et '-' : les murets centraux (si tu veux qu'on puisse rouler dessus, retire-les d'ici)
-            if (c == '#' || c == '+' || c == '-') {
+            // LISTE DES ZONES SÛRES (Où on a le droit de rouler)
+            // ' ' = Route
+            // '|' = Ligne de parking (on peut rouler dessus pour se garer)
+            // '-' = Pointillés
+            // '<' et '>' = Flèches au sol
+            // '.' = Décoration sol
+            if (c == ' ' || c == '|' || c == '-' || c == '_' || 
+                c == '<' || c == '>' || c == '.') {
+                
+                grid[map_hauteur][x] = 0; // C'est LIBRE (Route)
+            
+            } else {
+                // Tout le reste (#, +, █, ║, A, Z...) devient un MUR
                 grid[map_hauteur][x] = 2; // OBSTACLE
-            } 
-            // 2. TOUT LE RESTE EST LIBRE
-            // (Espaces, '|' pour se garer, '<', '>')
-            else {
-                grid[map_hauteur][x] = 0; // LIBRE
             }
         }
-        // ---------------------------------------------
         map_hauteur++;
     }
     fclose(f);

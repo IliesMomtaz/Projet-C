@@ -1,15 +1,9 @@
 #include <stdio.h>
-#include <unistd.h> 
-#include <signal.h>
-#include <string.h>
-#include <termios.h>
-#include <fcntl.h>
-
 #include "menu.h"
 #include "afficher_map.h"
 #include "game_pause.h"
 #include "jouer.h"
-#include "fonctions.h" // Inclusion nécessaire
+#include "fonctions.h"
 
 int main(void)
 {
@@ -27,14 +21,14 @@ int main(void)
             }
         }
         else if (statut == 'J' || statut == 'P') {
-            char resultat = key_pressed(); // Appel depuis fonctions.c
+            char resultat = key_pressed(); 
 
             if (resultat == 'M' || resultat == 'm') {
                 statut = 'M';
                 printf("\033[2J\033[H");
                 continue;
             }
-            if (resultat == 'X' || resultat == 'x') {
+            if (resultat == 'x' || resultat == 'X') {
                 statut = 'Q';
                 continue;
             }

@@ -1,31 +1,28 @@
-// Vehicule.h
 #ifndef VEHICULE_H
 #define VEHICULE_H
 
-#include <stdio.h>
+// --- DIMENSIONS ---
+#define LARGEUR_VEHICULE 9 
+#define HAUTEUR_VEHICULE 3
 
-
-typedef struct voiture VEHICULE;
-
-struct voiture
-{
-    char direction;
+typedef struct vehicule {
     int posx;
     int posy;
+    char direction; // 'N', 'S', 'E', 'O'
     int vitesse;
+    char type;      
     char alignement;
-    char type;
-    char Carrosserie[4][30];
-    int code_couleur;
     char etat;
-    unsigned long int tps;
-    struct voiture *NXT;
-};
+    int tps;
+    
+    // Taille mémoire augmentée pour supporter les caractères spéciaux
+    char Carrosserie[4][50]; 
 
-#define LARGEUR_VEHICULE 1 // CORRECTION : 8 pour correspondre au "########"
-#define HAUTEUR_VEHICULE 1
+    struct vehicule *NXT;
+} VEHICULE;
 
-void move_vehicle(VEHICULE *v);
+// --- PROTOTYPES AJOUTÉS (C'est ce qui manquait !) ---
 void controler_vehicule_manuel(VEHICULE *v, char key);
+void move_vehicle(VEHICULE *v);
 
 #endif
