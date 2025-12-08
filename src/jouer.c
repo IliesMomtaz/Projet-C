@@ -1,3 +1,4 @@
+// jouer.c
 #include <stdio.h>
 #include <unistd.h> 
 #include <signal.h>
@@ -31,25 +32,28 @@ void jouer(char *statut, char resultat)
 }
 
 //fonction qui nous génére (juste ne printf pour l'instant) les voitures en fonction du mode
+//fonction qui nous génére (juste ne printf pour l'instant) les voitures en fonction du mode
 static void gerer_generation_vehicules(char mode, int compteur)
 {
-    // Remplacement des printf par la vraie logique
-    if (mode == '1') {
-        if (compteur % 180 == 0) {
-            VEHICULE* new_v = create_vehicle('E', 1, 'v'); // Crée un véhicule se dirigeant vers l'Est
-            if (new_v != NULL) {
-                new_v->posx = 2; new_v->posy = 5; // Position de l'entrée (à adapter)
-                add_vehicle(&g_list_vehicules, new_v);
-            }
-        }
-    } else if (mode == '2') {
-        if (compteur % 60 == 0) {
-            VEHICULE* new_v = create_vehicle('E', 1, 'c');
-            if (new_v != NULL) {
-                new_v->posx = 2; new_v->posy = 5; 
-                add_vehicle(&g_list_vehicules, new_v);
-            }
-        }
+    // MODIFICATION : Si une voiture existe déjà, on arrête tout de suite.
+    // Comme ça, il n'y en aura qu'une seule sur la carte.
+    if (g_list_vehicules != NULL) {
+        return; 
+    }
+
+    // Si on arrive ici, c'est qu'il n'y a pas de voiture, donc on la crée.
+    // (Peu importe le mode 1 ou 2 pour l'instant)
+    
+    VEHICULE* new_v = create_vehicle('E', 1, 'v'); // Crée un véhicule se dirigeant vers l'Est
+    if (new_v != NULL) {
+        // Coordonnées de test (milieu de l'allée)
+        new_v->posx = 30; 
+        new_v->posy = 12; 
+        
+        add_vehicle(&g_list_vehicules, new_v);
+        
+        // On marque la zone occupée sur la grille
+        occupy_area(new_v->posx, new_v->posy, LARGEUR_VEHICULE, HAUTEUR_VEHICULE);
     }
 }
 
@@ -79,10 +83,19 @@ static int verifier_fin_partie(int temps)
     return 0;
 }
 
-// Correcte : La fonction accepte un pointeur vers un char, un char, deux entiers
-void maj_jeu(char *statut, char mode, int compteur, int temps)
+// MISE À JOUR : La fonction accepte maintenant la touche pressée 'key'
+void maj_jeu(char *statut, char mode, int compteur, int temps, char key)
 {
     gerer_generation_vehicules(mode, compteur);
+
+    // LOGIQUE DE CONTRÔLE : Si une touche directionnelle est pressée et qu'un véhicule existe
+    if (g_list_vehicules != NULL && 
+        (key == 'z' || key == 'Z' || key == 'd' || key == 'D' || 
+         key == 'q' || key == 'Q' || key == 's' || key == 'S')) {
+             
+        // On contrôle le premier véhicule de la liste
+        controler_vehicule_manuel(g_list_vehicules, key);
+    }
 
     // 1. Déplacement de tous les véhicules
     VEHICULE *courant = g_list_vehicules;

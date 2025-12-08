@@ -1,3 +1,4 @@
+// Vehicule.h
 #ifndef VEHICULE_H
 #define VEHICULE_H
 
@@ -21,8 +22,8 @@ struct voiture
     struct voiture *NXT;
 };
 
-#define LARGEUR_VEHICULE 3
-#define HAUTEUR_VEHICULE 4
+#define LARGEUR_VEHICULE 1 // CORRECTION : 8 pour correspondre au "########"
+#define HAUTEUR_VEHICULE 1
 
 void move_vehicle(VEHICULE *v);
 void controler_vehicule_manuel(VEHICULE *v, char key);
