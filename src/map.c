@@ -19,8 +19,7 @@ void chargement_map(void)
     map_hauteur = 0;
     map_largeur = 0;
 
-    // 1. On remplit la grille de "2" (MURS) par défaut
-    // Comme ça, le vide est dangereux !
+    // 1. Par sécurité, on remplit tout de MURS (2) au départ
     for (int y = 0; y < MAX_HAUTEUR; y++) {
         for (int x = 0; x < MAX_LARGEUR; x++) {
             grid[y][x] = 2; 
@@ -43,24 +42,25 @@ void chargement_map(void)
         map[map_hauteur][len] = '\0';
         if (len > map_largeur) map_largeur = len;
 
-        // --- NOUVELLE LOGIQUE : TOUT EST UN MUR SAUF LA ROUTE ---
+        // --- LOGIQUE DE COLLISION STRICTE ---
         for (int x = 0; x < len; x++) {
             char c = map[map_hauteur][x];
 
-            // LISTE DES ZONES SÛRES (Où on a le droit de rouler)
-            // ' ' = Route
-            // '|' = Ligne de parking (on peut rouler dessus pour se garer)
-            // '-' = Pointillés
-            // '<' et '>' = Flèches au sol
-            // '.' = Décoration sol
-            if (c == ' ' || c == '|' || c == '-' || c == '_' || 
-                c == '<' || c == '>' || c == '.') {
+            // LISTE DES ZONES AUTORISÉES (Seulement la route !)
+            // Si c'est un espace ' ' OU une flèche '<' '>' OU un point '.', on roule.
+            if (c == ' ' || c == '<' || c == '>' || c == '.') {
                 
-                grid[map_hauteur][x] = 0; // C'est LIBRE (Route)
+                grid[map_hauteur][x] = 0; // C'est LIBRE (0)
             
-            } else {
-                // Tout le reste (#, +, █, ║, A, Z...) devient un MUR
-                grid[map_hauteur][x] = 2; // OBSTACLE
+            } 
+            // TOUT LE RESTE DEVIENT UN MUR (2)
+            // Cela inclut :
+            // '#' (Murs)
+            // '+' (Coins)
+            // '-' (Lignes horizontales)
+            // '|' ou '│' (Lignes verticales)
+            else {
+                grid[map_hauteur][x] = 2; // C'est un OBSTACLE
             }
         }
         map_hauteur++;
