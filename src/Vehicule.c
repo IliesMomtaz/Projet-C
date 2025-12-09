@@ -2,21 +2,36 @@
 #include <stdlib.h>
 #include "Vehicule.h"
 #include "map.h"
-#include "fonctions.h"
+#include "fonctions.h" 
 
-// Contrôle manuel (Conversion touches -> Direction)
+// Gère le changement de direction et la rotation du sprite (Joueur)
 void controler_vehicule_manuel(VEHICULE *v, char key) 
 {
     if (v == NULL) return;
     
-    // On accepte les flèches (renvoyées comme A, B, C, D par key_pressed)
-    if (key == 'A') v->direction = 'N';      // Haut
-    else if (key == 'B') v->direction = 'S'; // Bas
-    else if (key == 'C') v->direction = 'E'; // Droite
-    else if (key == 'D') v->direction = 'O'; // Gauche
+    char nouvelle_dir = v->direction;
+    
+    if (key == 'A') nouvelle_dir = 'N';      // Haut
+    else if (key == 'B') nouvelle_dir = 'S'; // Bas
+    else if (key == 'C') nouvelle_dir = 'E'; // Droite
+    else if (key == 'D') nouvelle_dir = 'O'; // Gauche
+
+    if (nouvelle_dir != v->direction) {
+        free_area(v->posx, v->posy, v->w, v->h);
+
+        // Calcul des nouvelles dimensions avant de valider
+        int new_w = (nouvelle_dir == 'N' || nouvelle_dir == 'S') ? 6 : 9;
+        int new_h = (nouvelle_dir == 'N' || nouvelle_dir == 'S') ? 5 : 3;
+
+        if (is_free(v->posx, v->posy, new_w, new_h)) {
+            v->direction = nouvelle_dir;
+            charger_sprite(v); 
+        }
+        occupy_area(v->posx, v->posy, v->w, v->h);
+    }
 }
 
-// Déplacement avec correction de l'AUTO-COLLISION
+// Gère le déplacement (Avancer)
 void move_vehicle(VEHICULE *v)
 {
     if (v == NULL) return;
@@ -29,7 +44,6 @@ void move_vehicle(VEHICULE *v)
     int newx = v->posx;
     int newy = v->posy;
 
-    // Calcul de la future position
     switch (v->direction) {
         case 'N': newy--; break;
         case 'S': newy++; break;
@@ -37,20 +51,121 @@ void move_vehicle(VEHICULE *v)
         case 'O': newx--; break;
     }
 
-    // --- CORRECTION MAJEURE ICI ---
-    
-    // 1. On "soulève" la voiture (on efface sa position actuelle de la grille)
-    // Sinon, elle se détecte elle-même comme un obstacle !
-    free_area(v->posx, v->posy, LARGEUR_VEHICULE, HAUTEUR_VEHICULE);
+    free_area(v->posx, v->posy, v->w, v->h);
 
-    // 2. On vérifie si la destination est libre (Murs ou AUTRES voitures)
-    if (is_free(newx, newy, LARGEUR_VEHICULE, HAUTEUR_VEHICULE)) {
-        // C'est libre : on valide le déplacement
+    if (is_free(newx, newy, v->w, v->h)) {
         v->posx = newx;
         v->posy = newy;
     } 
-    // Sinon (Mur), on ne change pas v->posx/v->posy, elle reste sur place.
 
-    // 3. On "repose" la voiture sur la grille (à la nouvelle ou l'ancienne position)
-    occupy_area(v->posx, v->posy, LARGEUR_VEHICULE, HAUTEUR_VEHICULE);
+    occupy_area(v->posx, v->posy, v->w, v->h);
+}
+
+void despawn_vehicule(VEHICULE *v) {
+    free_area(v->posx, v->posy, v->w, v->h); 
+    v->etat = '0'; 
+    v->posx = -100; 
+}
+
+// --- INTELLIGENCE ARTIFICIELLE : CONTOURNEMENT ---
+void gerer_ia_sortie(VEHICULE *v) {
+    if (v == NULL || v->etat != '3') return;
+
+    // --- REPÈRES ---
+    int Y_SORTIE = 17;   // Ligne de sortie
+    int X_FIN = 105;     // Fin de la map
+    int X_ALLEE = 45;    // Zone sûre à gauche
+    // ----------------
+
+    v->tps++;
+    if (v->tps < 1) return; // Vitesse Max
+    v->tps = 0;
+
+    // 1. SI SORTI -> DESPAWN
+    if (v->posx >= X_FIN) {
+        despawn_vehicule(v);
+        return;
+    }
+
+    // 2. CAS : ON EST ALIGNÉ SUR LA SORTIE (Y=17) -> ON FONCE
+    if (v->posy == Y_SORTIE) {
+        if (v->direction != 'E') {
+            free_area(v->posx, v->posy, v->w, v->h);
+            v->direction = 'E'; // Regarde à droite
+            charger_sprite(v);
+            occupy_area(v->posx, v->posy, v->w, v->h);
+        }
+        move_vehicle(v);
+    }
+
+    // 3. CAS : ON N'EST PAS ALIGNÉ -> IL FAUT MANOEUVRER
+    else {
+        
+        // A. SI ON EST TROP À DROITE (Dans les places ou bloqué par le mur central)
+        if (v->posx > X_ALLEE) {
+            
+            // On veut aller à GAUCHE (Ouest) pour rejoindre l'allée
+            // MAIS on vérifie si on va taper un mur !
+            
+            free_area(v->posx, v->posy, v->w, v->h);
+            int obstacle_a_gauche = !is_free(v->posx - 1, v->posy, 9, 3); // 9x3 = taille horizontale
+            occupy_area(v->posx, v->posy, v->w, v->h);
+
+            // SCÉNARIO 1 : La voie est libre à gauche
+            if (!obstacle_a_gauche) {
+                if (v->direction != 'O') {
+                    free_area(v->posx, v->posy, v->w, v->h);
+                    v->direction = 'O'; // On tourne à gauche
+                    charger_sprite(v);
+                    occupy_area(v->posx, v->posy, v->w, v->h);
+                }
+                move_vehicle(v);
+            }
+            
+            // SCÉNARIO 2 : MUR EN FACE !! (C'est ton problème actuel)
+            // La voiture veut aller à gauche mais tape le rectangle central.
+            // -> SOLUTION : On force le contournement vers le BAS (Sud).
+            else {
+                // On vérifie si on peut descendre pour contourner
+                free_area(v->posx, v->posy, v->w, v->h);
+                int peut_descendre = is_free(v->posx, v->posy + 1, 6, 5); // 6x5 = taille verticale
+                occupy_area(v->posx, v->posy, v->w, v->h);
+
+                if (peut_descendre) {
+                    if (v->direction != 'S') {
+                        free_area(v->posx, v->posy, v->w, v->h);
+                        v->direction = 'S'; // On tourne vers le bas
+                        charger_sprite(v);
+                        occupy_area(v->posx, v->posy, v->w, v->h);
+                    }
+                    move_vehicle(v);
+                }
+                // Si on ne peut pas descendre, on essaie de monter (Secours)
+                else {
+                    if (v->direction != 'N') {
+                        free_area(v->posx, v->posy, v->w, v->h);
+                        v->direction = 'N';
+                        charger_sprite(v);
+                        occupy_area(v->posx, v->posy, v->w, v->h);
+                    }
+                    move_vehicle(v);
+                }
+            }
+        }
+
+        // B. SI ON EST DANS L'ALLÉE CENTRALE (X <= 45) -> ON S'ALIGNE
+        else {
+            char dir_voulue = (v->posy < Y_SORTIE) ? 'S' : 'N';
+            
+            if (v->direction != dir_voulue) {
+                free_area(v->posx, v->posy, v->w, v->h);
+                if (is_free(v->posx, v->posy, 6, 5)) {
+                    v->direction = dir_voulue;
+                    charger_sprite(v);
+                }
+                occupy_area(v->posx, v->posy, v->w, v->h);
+            }
+            move_vehicle(v);
+        }
+    }
 }

@@ -1,7 +1,6 @@
 #include "fonctions.h"
 #include "map.h"
 #include "Vehicule.h"
-
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
@@ -12,7 +11,6 @@
 extern int grid[MAX_HAUTEUR][MAX_LARGEUR];
 VEHICULE* g_list_vehicules = NULL;
 
-// Vérifie si l'endroit est libre
 int is_free(int x, int y, int l, int h) {
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < l; j++) {
@@ -39,31 +37,57 @@ void occupy_area(int x, int y, int l, int h) {
     }
 }
 
+// --- NOUVELLE FONCTION : Charge le dessin selon la direction ---
+void charger_sprite(VEHICULE *v) {
+    // Nettoyage complet
+    for(int i=0; i<6; i++) strcpy(v->Carrosserie[i], "");
+
+    if (v->direction == 'E') { // EST (Horizontal)
+        v->w = 9; v->h = 3;
+        strncpy(v->Carrosserie[0], "┌─┬───┼─┐", 40);
+        strncpy(v->Carrosserie[1], "│ │|||│ │", 40);
+        strncpy(v->Carrosserie[2], "└─┴───┼─┘", 40);
+    }
+    else if (v->direction == 'O') { // OUEST (Horizontal) - Ton fichier voiture-o
+        v->w = 9; v->h = 3;
+        strncpy(v->Carrosserie[0], "┌─┼───┬─┐", 40);
+        strncpy(v->Carrosserie[1], "│ │|||│ │", 40);
+        strncpy(v->Carrosserie[2], "└─┼───┴─┘", 40);
+    }
+    else if (v->direction == 'N') { // NORD (Vertical) - Ton fichier voiture-n
+        v->w = 6; v->h = 5;
+        strncpy(v->Carrosserie[0], "┌────┐", 40);
+        strncpy(v->Carrosserie[1], "┼────┼", 40);
+        strncpy(v->Carrosserie[2], "│====│", 40);
+        strncpy(v->Carrosserie[3], "├────┤", 40);
+        strncpy(v->Carrosserie[4], "└────┘", 40);
+    }
+    else if (v->direction == 'S') { // SUD (Vertical) - Ton fichier voiture-s
+        v->w = 6; v->h = 5;
+        strncpy(v->Carrosserie[0], "┌────┐", 40);
+        strncpy(v->Carrosserie[1], "├────┤", 40);
+        strncpy(v->Carrosserie[2], "│====│", 40);
+        strncpy(v->Carrosserie[3], "┼────┼", 40);
+        strncpy(v->Carrosserie[4], "└────┘", 40);
+    }
+}
+
 VEHICULE* create_vehicle(char direction, int vitesse, char type){
     VEHICULE* v = malloc(sizeof(VEHICULE));
     if (v == NULL) return NULL;
 
-    v->posx = 0;
-    v->posy = 0;
+    v->posx = 0; v->posy = 0;
     v->direction = direction;
     v->vitesse = vitesse;
     v->type = type;
     v->alignement = 'g';
     v->etat = '1';
     v->tps = 0;
+    v->timer_attente = 0;
     v->NXT = NULL;
 
-    // --- DESSIN SÉCURISÉ (40 carac) ---
-    strncpy(v->Carrosserie[0], "┌─┬───┼─┐", 40);
-    v->Carrosserie[0][39] = '\0';
-    
-    strncpy(v->Carrosserie[1], "│ │|||│ │", 40);
-    v->Carrosserie[1][39] = '\0'; 
-    
-    strncpy(v->Carrosserie[2], "└─┴───┼─┘", 40);
-    v->Carrosserie[2][39] = '\0'; 
-
-    strcpy(v->Carrosserie[3], "");
+    // Charge le bon sprite dès le début
+    charger_sprite(v);
 
     return v;
 }
@@ -74,29 +98,17 @@ void add_vehicle(VEHICULE** head, VEHICULE* v){
     *head = v;
 }
 
-// --- TA FONCTION D'ORIGINE (RESTAURÉE) ---
-char key_pressed()
-{
+char key_pressed(void) {
     struct termios oldterm, newterm;
-    int oldfd; 
-    char c, result = 0;
-    
+    int oldfd; char c, result = 0;
     tcgetattr (STDIN_FILENO, &oldterm);
-    newterm = oldterm; 
-    newterm.c_lflag &= ~(ICANON | ECHO);
+    newterm = oldterm; newterm.c_lflag &= ~(ICANON | ECHO);
     tcsetattr (STDIN_FILENO, TCSANOW, &newterm);
-    
     oldfd = fcntl(STDIN_FILENO, F_GETFL, 0);
     fcntl (STDIN_FILENO, F_SETFL, oldfd | O_NONBLOCK);
-    
     c = getchar();
-    
     tcsetattr (STDIN_FILENO, TCSANOW, &oldterm);
     fcntl (STDIN_FILENO, F_SETFL, oldfd);
-    
-    if (c != EOF) {
-        ungetc(c, stdin); 
-        result = getchar();
-    }
+    if (c != EOF) { ungetc(c, stdin); result = getchar(); }
     return result;
 }
