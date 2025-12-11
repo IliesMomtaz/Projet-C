@@ -84,6 +84,7 @@ VEHICULE* create_vehicle(char direction, int vitesse, char type){
     v->etat = '1';
     v->tps = 0;
     v->timer_attente = 0;
+    v->code_couleur = 31 + (rand() % 6); // Couleurs ANSI de 31 à 36
     v->NXT = NULL;
 
     // Charge le bon sprite dès le début

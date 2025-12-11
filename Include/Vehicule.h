@@ -17,7 +17,7 @@ typedef struct vehicule {
     // --- NOUVEAU ---
     int timer_attente; // Compteur pour savoir quand quitter le parking
     // ----------------
-
+    int code_couleur; // Code couleur ANSI pour l'affichage
     char Carrosserie[6][40]; // Le dessin de la voiture
     struct vehicule * NXT;   // Pointeur vers la voiture suivante (liste chainée)
 } VEHICULE;
