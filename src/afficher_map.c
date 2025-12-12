@@ -15,21 +15,49 @@ void afficher_map(void)
             char c = map[y][x];
 
             // Si c'est un mur (#) ou une bordure, on met en BLEU
-            if (c == '#') {
-                printf("\033[34m%c\033[0m", c); // 34 = Bleu
+            if (c == '#') { // 219 est le code du pavé plein (█) si utilisé
+                printf("\033[1;36m\u2502\033[0m");
+            } 
+            else if (c == '-') {
+                printf("\033[1;36m\u2500\033[0m"); // Affiche '─'
             }
-            // SI C'EST UNE BORDURE (-, |, 1, 2, 3, 4) -> On le met en CYAN
-            else if (c == '-'  || (c >= '1' && c <= '4')) {
-                // Tu peux aussi utiliser les caractères spéciaux ici
-                // Exemple : if (c=='-') printf("\u2500");
-                
-                printf("\033[1;36m%c\033[0m", c); // 36 = Cyan
+            else if (c == '1') {
+                // Coin Haut-Gauche : ┌
+                printf("\033[1;36m\u250C\033[0m"); 
             }
-            // SI C'EST DE L'HERBE OU DECO -> VERT
-            else if (c == '>' || c == '|') {
-                printf("\033[1;35m%c\033[0m", c); // 35 = Magenta
+            else if (c == '2') {
+                // Coin Haut-Droite : ┐
+                printf("\033[1;36m\u2510\033[0m"); 
             }
-            // SINON (Route, vide) -> BLANC (Par défaut)
+            else if (c == '3') {
+                // Coin Bas-Gauche : └
+                printf("\033[1;36m\u2514\033[0m"); 
+            }
+            else if (c == '4') {
+                // Coin Bas-Droite : ┘
+                printf("\033[1;36m\u2518\033[0m");
+            }
+            else if (c == '1') {
+                // Coin Haut-Gauche : ┌
+                printf("\033[1;36m\u250C\033[0m"); 
+            }
+            else if (c == '2') {
+                // Coin Haut-Droite : ┐
+                printf("\033[1;36m\u2510\033[0m"); 
+            }
+            else if (c == '3') {
+                // Coin Bas-Gauche : └
+                printf("\033[1;36m\u2514\033[0m"); 
+            }
+            else if (c == '4') {
+                // Coin Bas-Droite : ┘
+                printf("\033[1;36m\u2518\033[0m");
+            }
+            // Si c'est de l'herbe ou déco extérieure, on peut mettre en VERT par exemple
+            else if (c == '|' || c == '>') {
+                printf("\033[1;35m%c\033[0m", c);
+            }
+            // Sinon (la route, les lignes), on laisse en blanc par défaut
             else {
                 printf("%c", c);
             }
@@ -38,6 +66,7 @@ void afficher_map(void)
         printf("\n"); // Fin de la ligne
     }
 }
+
 
 // 2. Fonction qui affiche les voitures (Active + Garées)
 void afficher_vehicules(VEHICULE* head) 
