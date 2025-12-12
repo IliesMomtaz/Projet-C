@@ -15,7 +15,7 @@ void afficher_map(void)
             char c = map[y][x];
 
             // Si c'est un mur (#) ou une bordure, on met en BLEU
-if (c == '#') {
+            if (c == '#') {
                 printf("\033[34m%c\033[0m", c); // 34 = Bleu
             }
             // SI C'EST UNE BORDURE (-, |, 1, 2, 3, 4) -> On le met en CYAN
