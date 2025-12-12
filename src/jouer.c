@@ -10,6 +10,7 @@
 extern VEHICULE* g_list_vehicules;
 char mode_jeu = '1';
 
+
 void jouer(char *statut, char resultat)
 {
     if (resultat == '1' || resultat == '2') {
@@ -27,21 +28,19 @@ static void gerer_generation_vehicules(char mode, int compteur)
     (void)mode;
     (void)compteur;
 
-    // 1. On vérifie si une voiture roule déjà (le code que je t'ai donné avant)
+    // verification de l'existance d'une voiture active 
     VEHICULE *parcours = g_list_vehicules;
     while (parcours != NULL) {
         if (parcours->etat == '1') return;
         parcours = parcours->NXT;
     }
 
-    // 2. CRÉATION AVEC NOUVELLES COORDONNÉES
-    // Attention : J'ai changé 'E' (Est) en 'O' (Ouest) pour qu'elle regarde vers la gauche !
-    // Si tu veux qu'elle regarde vers la droite, remets 'E'.
-    VEHICULE* new_v = create_vehicle('E', 1, 'v'); 
+    // Création d'une nouvelle voiture
+    VEHICULE* new_v = create_vehicle('O', 1, 'v'); 
 
     if (new_v != NULL) {
-        new_v->posx = 3; // Colonne (X) demandée
-        new_v->posy = 14; // Ligne (Y) demandée
+        new_v->posx = 63; // Colonne (X) demandée
+        new_v->posy = 13; // Ligne (Y) demandée
         
         new_v->vitesse = 0; // À l'arrêt au spawn
 
@@ -59,41 +58,25 @@ static int verifier_fin_partie(int temps)
 static void gerer_barrieres(int temps) { (void)temps; } // Ajout pour éviter warning
 static void gerer_paiement(void) {}
 
+// Mise à jour principale du jeu à chaque cycle
 void maj_jeu(char *statut, char mode, int compteur, int temps, char key)
 {
-    // --- CALCUL DU TEMPS D'ATTENTE ---
-    // Votre boucle tourne à env. 0.1s (usleep 100000)
-    int duree_attente;
-
-    if (mode == '1') {
-        duree_attente = 100; // 100 * 0.1s = 10 secondes
-    } 
-    else {
-        duree_attente = 50;  // 70 * 0.1s = 7 secondes
-    }
-    // ---------------------------------
-
-    // 1. On gère l'apparition des nouvelles voitures
+    // On gère l'apparition des nouvelles voitures
     gerer_generation_vehicules(mode, compteur);
 
     VEHICULE *parcours = g_list_vehicules;
     VEHICULE *active_car = NULL;
 
-    // --- BOUCLE PRINCIPALE SUR TOUTES LES VOITURES ---
     while (parcours != NULL) {
-        
-        // Cas 1 : La voiture du JOUEUR (Etat '1')
+        //Voiture active 
         if (parcours->etat == '1') {
             active_car = parcours;
-            
-            // --- C'EST ICI QUE LA VOITURE SE GARE ---
+            // Gestion touches joueur
             if (key == ' ') {
-                active_car->etat = '2'; // Passe en mode GARÉE
+                active_car->etat = '2'; // On se gare
                 active_car->vitesse = 0;
-                active_car->timer_attente = 0; // On remet le chrono à 0
+                active_car->timer_attente = 0; // On lance le chrono !
             }
-            // ----------------------------------------
-            
             else if (key == 'A' || key == 'B' || key == 'C' || key == 'D') {
                 controler_vehicule_manuel(active_car, key);
             }
@@ -101,26 +84,25 @@ void maj_jeu(char *statut, char mode, int compteur, int temps, char key)
             move_vehicle(active_car);
         }
 
-        // Cas 2 : Voiture GARÉE (Etat '2') -> Compte à rebours
+        // Voiture garée 
         else if (parcours->etat == '2') {
-            parcours->timer_attente++; // On augmente le compteur de 1 à chaque tour
-            
-            // Si on dépasse la durée définie (10s ou 7s), on passe en sortie
-            if (parcours->timer_attente >= duree_attente) {
-                parcours->etat = '3'; // C'est l'heure de partir !
+            parcours->timer_attente++;
+            // attend 100 cycles avant de partir
+            if (parcours->timer_attente > 100) {
+                parcours->etat = '3'; // elle sort
             }
         }
 
-        // Cas 3 : Voiture EN SORTIE (Etat '3') -> L'IA conduit vers la sortie
+        //Voiture sort
         else if (parcours->etat == '3') {
             gerer_ia_sortie(parcours);
         }
 
         parcours = parcours->NXT;
     }
-    // -------------------------------------------------
 
-    // Gestion fin de partie, Barrières, etc.
+
+    // Gestion fin de partie, Barrières, paiement
     if (verifier_fin_partie(temps)) *statut = 'M';
     gerer_barrieres(temps);
     gerer_paiement();

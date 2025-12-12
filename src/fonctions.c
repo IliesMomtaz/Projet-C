@@ -11,6 +11,7 @@
 extern int grid[MAX_HAUTEUR][MAX_LARGEUR];
 VEHICULE* g_list_vehicules = NULL;
 
+// verifie si une zone est libre (on retourne 0) ou occupée (on retourne 1)
 int is_free(int x, int y, int l, int h) {
     for (int i = 0; i < h; i++) {
         for (int j = 0; j < l; j++) {
@@ -21,6 +22,7 @@ int is_free(int x, int y, int l, int h) {
     return 1;
 }
 
+// libère une zone (met à 0 dans la grille)
 void free_area(int x, int y, int l, int h) {
     for (int i = 0; i < h; i++){
         for (int j = 0; j < l; j++){
@@ -29,6 +31,7 @@ void free_area(int x, int y, int l, int h) {
     }
 }
 
+// occupe une zone (met à 1 dans la grille)
 void occupy_area(int x, int y, int l, int h) {
     for (int i = 0; i < h; i++){
         for (int j = 0; j < l; j++){
@@ -37,24 +40,24 @@ void occupy_area(int x, int y, int l, int h) {
     }
 }
 
-// --- NOUVELLE FONCTION : Charge le dessin selon la direction ---
+// charge le sprite du véhicule en fonction sa direction
 void charger_sprite(VEHICULE *v) {
-    // Nettoyage complet
+    // initialise des lignes à vide
     for(int i=0; i<6; i++) strcpy(v->Carrosserie[i], "");
 
-    if (v->direction == 'E') { // EST (Horizontal)
+    if (v->direction == 'E') { // sprite horizontal est
         v->w = 9; v->h = 3;
         strncpy(v->Carrosserie[0], "┌─┬───┼─┐", 40);
         strncpy(v->Carrosserie[1], "│ │|||│ │", 40);
         strncpy(v->Carrosserie[2], "└─┴───┼─┘", 40);
     }
-    else if (v->direction == 'O') { // OUEST (Horizontal) - Ton fichier voiture-o
+    else if (v->direction == 'O') { // sprite horizontal ouest
         v->w = 9; v->h = 3;
         strncpy(v->Carrosserie[0], "┌─┼───┬─┐", 40);
         strncpy(v->Carrosserie[1], "│ │|||│ │", 40);
         strncpy(v->Carrosserie[2], "└─┼───┴─┘", 40);
     }
-    else if (v->direction == 'N') { // NORD (Vertical) - Ton fichier voiture-n
+    else if (v->direction == 'N') { // sprite vertical nord
         v->w = 6; v->h = 5;
         strncpy(v->Carrosserie[0], "┌────┐", 40);
         strncpy(v->Carrosserie[1], "┼────┼", 40);
@@ -62,7 +65,7 @@ void charger_sprite(VEHICULE *v) {
         strncpy(v->Carrosserie[3], "├────┤", 40);
         strncpy(v->Carrosserie[4], "└────┘", 40);
     }
-    else if (v->direction == 'S') { // SUD (Vertical) - Ton fichier voiture-s
+    else if (v->direction == 'S') { // sprite vertical sud
         v->w = 6; v->h = 5;
         strncpy(v->Carrosserie[0], "┌────┐", 40);
         strncpy(v->Carrosserie[1], "├────┤", 40);
@@ -72,6 +75,7 @@ void charger_sprite(VEHICULE *v) {
     }
 }
 
+// crée un nouveau véhicule avec des valeurs par défaut
 VEHICULE* create_vehicle(char direction, int vitesse, char type){
     VEHICULE* v = malloc(sizeof(VEHICULE));
     if (v == NULL) return NULL;
@@ -93,6 +97,7 @@ VEHICULE* create_vehicle(char direction, int vitesse, char type){
     return v;
 }
 
+// ajoute un véhicule au début de la liste chaînée
 void add_vehicle(VEHICULE** head, VEHICULE* v){
     if (v == NULL) return;
     v->NXT = *head;

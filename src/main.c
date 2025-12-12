@@ -10,7 +10,7 @@ int main(void)
     char statut = 'M'; 
     int compteur = 0;  
     int temps = 0;     
-    
+    // tant que le statut n'est pas 'Q', on continue le jeu
     while (statut != 'Q') {
         if (statut == 'M') {
             char choix = menu();

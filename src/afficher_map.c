@@ -4,7 +4,6 @@
 #include "map.h"
 #include "Vehicule.h"
 
-// Cette fonction affiche les murs mais avec des couleurs (versions amelioré de celle de base)
 void afficher_map(void)
 {
     for (int y = 0; y < map_hauteur; y++) 
@@ -13,12 +12,13 @@ void afficher_map(void)
         {
             char c = map[y][x];
 
-            // Si c'est un mur (#) ou une bordure on le colori en bleu 
             if (c == '#') { 
+                // Affiche '│' en bleu clair
                 printf("\033[1;36m\u2502\033[0m");
             } 
             else if (c == '-') {
-                printf("\033[1;36m\u2500\033[0m"); // Affiche '─'
+                // Affiche '─'
+                printf("\033[1;36m\u2500\033[0m");
             }
             else if (c == '1') {
                 // Coin haut à gauche : ┌
@@ -36,59 +36,41 @@ void afficher_map(void)
                 // Coin Bas-Droite : ┘
                 printf("\033[1;36m\u2518\033[0m");
             }
-            else if (c == '1') {
-                // Coin Haut-Gauche : ┌
-                printf("\033[1;36m\u250C\033[0m"); 
-            }
-            else if (c == '2') {
-                // Coin Haut-Droite : ┐
-                printf("\033[1;36m\u2510\033[0m"); 
-            }
-            else if (c == '3') {
-                // Coin Bas-Gauche : └
-                printf("\033[1;36m\u2514\033[0m"); 
-            }
-            else if (c == '4') {
-                // Coin Bas-Droite : ┘
-                printf("\033[1;36m\u2518\033[0m");
-            }
-            // Si c'est de l'herbe ou déco extérieure, on peut mettre en VERT par exemple
             else if (c == '|' || c == '>') {
-                printf("\033[1;35m%c\033[0m", c);
+                printf("\033[1;35m%c\033[0m", c);// violet
             }
-            // Sinon (la route, les lignes), on laisse en blanc par défaut
+            // Sinon par défaut
             else {
                 printf("%c", c);
             }
         
         }
-        printf("\n"); // Fin de la ligne
+        printf("\n"); 
     }
 }
 
 
-// 2. Fonction qui affiche les voitures (Active + Garées)
 void afficher_vehicules(VEHICULE* head) 
 {
     VEHICULE *courant = head;
     while (courant != NULL) 
     {
-        // On affiche si la voiture est active ('1'), garée ('2') ou sortante ('3')
+        // etat 1 : active, etat 2 garée, etat 3 sortante
         if (courant->etat != '0') 
         {
             
             for (int i = 0; i < courant->h; i++) 
-            { // Utilise courant->h (hauteur dynamique)
-                // 1. On place le curseur
+            { // courant->h (hauteur dynamique)
+                // On place le curseur
                 printf("\033[%d;%dH", courant->posy + i + 1, courant->posx + 1);
                 
-                // 2. On active la couleur de CE véhicule
+                // couleur du véhicule
                 printf("\033[%dm", courant->code_couleur); 
                 
-                // 3. On dessine la ligne de carrosserie
+                // dessin de la ligne de la carrosserie
                 printf("%s", courant->Carrosserie[i]);
                 
-                // 4. On remet la couleur normale (RESET) pour ne pas colorier toute la suite
+                // reset couleur
                 printf("\033[0m");
             }
         }

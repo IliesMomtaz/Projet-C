@@ -4,7 +4,7 @@
 #include "map.h"
 #include "fonctions.h" 
 
-// Gère le changement de direction et la rotation du sprite (Joueur)
+// Contrôle du véhicule du joueur en fonction de keypress()
 void controler_vehicule_manuel(VEHICULE *v, char key) 
 {
     if (v == NULL) return;
@@ -31,7 +31,7 @@ void controler_vehicule_manuel(VEHICULE *v, char key)
     }
 }
 
-// Gère le déplacement (Avancer)
+// Déplace le véhicule en fonction de sa direction 
 void move_vehicle(VEHICULE *v)
 {
     if (v == NULL) return;
@@ -67,27 +67,27 @@ void despawn_vehicule(VEHICULE *v) {
     v->posx = -100; 
 }
 
-// --- INTELLIGENCE ARTIFICIELLE : CONTOURNEMENT ---
+// faire sortir une voiture du parking
 void gerer_ia_sortie(VEHICULE *v) {
     if (v == NULL || v->etat != '3') return;
 
-    // --- REPÈRES ---
+    // références de position
     int Y_SORTIE = 14;   // Ligne de sortie
     int X_FIN = 140;     // Fin de la map
     int X_ALLEE = 42;    // Zone sûre à gauche
-    // ----------------
+
 
     v->tps++;
     if (v->tps < 1) return; // Vitesse Max
     v->tps = 0;
 
-    // 1. SI SORTI -> DESPAWN
+    // ON quitte le parking
     if (v->posx >= X_FIN) {
         despawn_vehicule(v);
         return;
     }
 
-    // 2. CAS : ON EST ALIGNÉ SUR LA SORTIE (Y=17) -> ON FONCE
+    // alignement vertical à la sortie
     if (v->posy == Y_SORTIE) {
         if (v->direction != 'E') {
             free_area(v->posx, v->posy, v->w, v->h);
@@ -98,20 +98,19 @@ void gerer_ia_sortie(VEHICULE *v) {
         move_vehicle(v);
     }
 
-    // 3. CAS : ON N'EST PAS ALIGNÉ -> IL FAUT MANOEUVRER
+    // Manœuvre pour rejoindre l'allée centrale
     else {
         
-        // A. SI ON EST TROP À DROITE (Dans les places ou bloqué par le mur central)
+        // 
         if (v->posx > X_ALLEE) {
             
-            // On veut aller à GAUCHE (Ouest) pour rejoindre l'allée
-            // MAIS on vérifie si on va taper un mur !
+            // si on est à droite de l'allée centrale on va à gauche
             
             free_area(v->posx, v->posy, v->w, v->h);
             int obstacle_a_gauche = !is_free(v->posx - 1, v->posy, 9, 3); // 9x3 = taille horizontale
             occupy_area(v->posx, v->posy, v->w, v->h);
 
-            // SCÉNARIO 1 : La voie est libre à gauche
+            // la voie est libre à gauche
             if (!obstacle_a_gauche) {
                 if (v->direction != 'O') {
                     free_area(v->posx, v->posy, v->w, v->h);
@@ -122,11 +121,9 @@ void gerer_ia_sortie(VEHICULE *v) {
                 move_vehicle(v);
             }
             
-            // SCÉNARIO 2 : MUR EN FACE !! (C'est ton problème actuel)
-            // La voiture veut aller à gauche mais tape le rectangle central.
-            // -> SOLUTION : On force le contournement vers le BAS (Sud).
+            // voie à gauche bloquée 
             else {
-                // On vérifie si on peut descendre pour contourner
+                // on essaie de descendre
                 free_area(v->posx, v->posy, v->w, v->h);
                 int peut_descendre = is_free(v->posx, v->posy + 1, 6, 5); // 6x5 = taille verticale
                 occupy_area(v->posx, v->posy, v->w, v->h);
@@ -140,7 +137,7 @@ void gerer_ia_sortie(VEHICULE *v) {
                     }
                     move_vehicle(v);
                 }
-                // Si on ne peut pas descendre, on essaie de monter (Secours)
+                // Si on ne peut pas descendre, on essaie de monter
                 else {
                     if (v->direction != 'N') {
                         free_area(v->posx, v->posy, v->w, v->h);
@@ -153,7 +150,7 @@ void gerer_ia_sortie(VEHICULE *v) {
             }
         }
 
-        // B. SI ON EST DANS L'ALLÉE CENTRALE (X <= 45) -> ON S'ALIGNE
+        // si on est à gauche de l'allée centrale on s'aligne verticalement
         else {
             char dir_voulue = (v->posy < Y_SORTIE) ? 'S' : 'N';
             
