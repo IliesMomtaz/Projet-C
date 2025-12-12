@@ -4,8 +4,7 @@
 #include "map.h"
 #include "Vehicule.h"
 
-// 1. Fonction qui affiche le fond (Murs et routes)
-// C'est celle qui manquait et qui créait ton erreur !
+// Cette fonction affiche les murs mais avec des couleurs (versions amelioré de celle de base)
 void afficher_map(void)
 {
     for (int y = 0; y < map_hauteur; y++) 
@@ -14,15 +13,15 @@ void afficher_map(void)
         {
             char c = map[y][x];
 
-            // Si c'est un mur (#) ou une bordure, on met en BLEU
-            if (c == '#') { // 219 est le code du pavé plein (█) si utilisé
+            // Si c'est un mur (#) ou une bordure on le colori en bleu 
+            if (c == '#') { 
                 printf("\033[1;36m\u2502\033[0m");
             } 
             else if (c == '-') {
                 printf("\033[1;36m\u2500\033[0m"); // Affiche '─'
             }
             else if (c == '1') {
-                // Coin Haut-Gauche : ┌
+                // Coin haut à gauche : ┌
                 printf("\033[1;36m\u250C\033[0m"); 
             }
             else if (c == '2') {

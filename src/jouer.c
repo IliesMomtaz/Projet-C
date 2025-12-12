@@ -37,11 +37,11 @@ static void gerer_generation_vehicules(char mode, int compteur)
     // 2. CRÉATION AVEC NOUVELLES COORDONNÉES
     // Attention : J'ai changé 'E' (Est) en 'O' (Ouest) pour qu'elle regarde vers la gauche !
     // Si tu veux qu'elle regarde vers la droite, remets 'E'.
-    VEHICULE* new_v = create_vehicle('O', 1, 'v'); 
+    VEHICULE* new_v = create_vehicle('E', 1, 'v'); 
 
     if (new_v != NULL) {
-        new_v->posx = 63; // Colonne (X) demandée
-        new_v->posy = 13; // Ligne (Y) demandée
+        new_v->posx = 3; // Colonne (X) demandée
+        new_v->posy = 14; // Ligne (Y) demandée
         
         new_v->vitesse = 0; // À l'arrêt au spawn
 
@@ -61,6 +61,18 @@ static void gerer_paiement(void) {}
 
 void maj_jeu(char *statut, char mode, int compteur, int temps, char key)
 {
+    // --- CALCUL DU TEMPS D'ATTENTE ---
+    // Votre boucle tourne à env. 0.1s (usleep 100000)
+    int duree_attente;
+
+    if (mode == '1') {
+        duree_attente = 100; // 100 * 0.1s = 10 secondes
+    } 
+    else {
+        duree_attente = 50;  // 70 * 0.1s = 7 secondes
+    }
+    // ---------------------------------
+
     // 1. On gère l'apparition des nouvelles voitures
     gerer_generation_vehicules(mode, compteur);
 
@@ -73,12 +85,15 @@ void maj_jeu(char *statut, char mode, int compteur, int temps, char key)
         // Cas 1 : La voiture du JOUEUR (Etat '1')
         if (parcours->etat == '1') {
             active_car = parcours;
-            // Gestion touches joueur
+            
+            // --- C'EST ICI QUE LA VOITURE SE GARE ---
             if (key == ' ') {
-                active_car->etat = '2'; // On se gare
+                active_car->etat = '2'; // Passe en mode GARÉE
                 active_car->vitesse = 0;
-                active_car->timer_attente = 0; // On lance le chrono !
+                active_car->timer_attente = 0; // On remet le chrono à 0
             }
+            // ----------------------------------------
+            
             else if (key == 'A' || key == 'B' || key == 'C' || key == 'D') {
                 controler_vehicule_manuel(active_car, key);
             }
@@ -88,9 +103,10 @@ void maj_jeu(char *statut, char mode, int compteur, int temps, char key)
 
         // Cas 2 : Voiture GARÉE (Etat '2') -> Compte à rebours
         else if (parcours->etat == '2') {
-            parcours->timer_attente++;
-            // Elle attend 100 cycles avant de partir (tu peux réduire ce nombre)
-            if (parcours->timer_attente > 100) {
+            parcours->timer_attente++; // On augmente le compteur de 1 à chaque tour
+            
+            // Si on dépasse la durée définie (10s ou 7s), on passe en sortie
+            if (parcours->timer_attente >= duree_attente) {
                 parcours->etat = '3'; // C'est l'heure de partir !
             }
         }

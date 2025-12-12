@@ -72,9 +72,9 @@ void gerer_ia_sortie(VEHICULE *v) {
     if (v == NULL || v->etat != '3') return;
 
     // --- REPÈRES ---
-    int Y_SORTIE = 17;   // Ligne de sortie
-    int X_FIN = 105;     // Fin de la map
-    int X_ALLEE = 45;    // Zone sûre à gauche
+    int Y_SORTIE = 14;   // Ligne de sortie
+    int X_FIN = 140;     // Fin de la map
+    int X_ALLEE = 42;    // Zone sûre à gauche
     // ----------------
 
     v->tps++;
