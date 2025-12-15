@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "map.h"
-
+//Ilies
 char map[MAX_HAUTEUR][MAX_LARGEUR];
 int grid[MAX_HAUTEUR][MAX_LARGEUR]; 
 
