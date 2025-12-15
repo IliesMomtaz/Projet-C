@@ -4,6 +4,7 @@
 #include "map.h"
 #include "Vehicule.h"
 
+//THEO 
 void afficher_map(void)
 {
     for (int y = 0; y < map_hauteur; y++) 
