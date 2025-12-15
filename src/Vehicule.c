@@ -4,6 +4,7 @@
 #include "map.h"
 #include "fonctions.h" 
 
+// TIM 
 // Contrôle du véhicule du joueur en fonction de keypress()
 void controler_vehicule_manuel(VEHICULE *v, char key) 
 {
