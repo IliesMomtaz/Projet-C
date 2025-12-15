@@ -7,6 +7,7 @@
 #include "fonctions.h"
 #include "Vehicule.h"
 
+//Ilies
 extern VEHICULE* g_list_vehicules;
 char mode_jeu = '1';
 
