@@ -4,7 +4,7 @@
 #include "game_pause.h"
 #include "jouer.h"
 #include "fonctions.h"
-
+//Ilies
 int main(void)
 {
     char statut = 'M'; 
