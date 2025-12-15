@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "menu.h"
 #include "fonctions.h" 
-
+//theo
 void affichage_menu(void)
 {
     // On nettoie l'écran
