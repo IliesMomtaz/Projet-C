@@ -8,6 +8,7 @@
 #include <termios.h>
 #include <fcntl.h>
 
+//TIM 
 extern int grid[MAX_HAUTEUR][MAX_LARGEUR];
 VEHICULE* g_list_vehicules = NULL;
 
@@ -22,6 +23,7 @@ int is_free(int x, int y, int l, int h) {
     return 1;
 }
 
+//TIM
 // libère une zone (met à 0 dans la grille)
 void free_area(int x, int y, int l, int h) {
     for (int i = 0; i < h; i++){
@@ -31,6 +33,7 @@ void free_area(int x, int y, int l, int h) {
     }
 }
 
+//TIM
 // occupe une zone (met à 1 dans la grille)
 void occupy_area(int x, int y, int l, int h) {
     for (int i = 0; i < h; i++){
@@ -41,6 +44,7 @@ void occupy_area(int x, int y, int l, int h) {
 }
 
 // charge le sprite du véhicule en fonction sa direction
+//Ilies
 void charger_sprite(VEHICULE *v) {
     // initialise des lignes à vide
     for(int i=0; i<6; i++) strcpy(v->Carrosserie[i], "");
@@ -74,7 +78,7 @@ void charger_sprite(VEHICULE *v) {
         strncpy(v->Carrosserie[4], "└────┘", 40);
     }
 }
-
+//TIM
 // crée un nouveau véhicule avec des valeurs par défaut
 VEHICULE* create_vehicle(char direction, int vitesse, char type){
     VEHICULE* v = malloc(sizeof(VEHICULE));
@@ -96,7 +100,7 @@ VEHICULE* create_vehicle(char direction, int vitesse, char type){
 
     return v;
 }
-
+//TIM
 // ajoute un véhicule au début de la liste chaînée
 void add_vehicle(VEHICULE** head, VEHICULE* v){
     if (v == NULL) return;
