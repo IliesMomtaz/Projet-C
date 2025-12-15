@@ -3,7 +3,7 @@
 #include "menu.h"
 #include "game_pause.h"
 #include "afficher_map.h"
-
+//Ilies
 void game_pause(char *statut, char resultat, int *compteur, int *temps){
     if (*statut == 'J') {
         if (resultat == 'P' || resultat == 'p') {
