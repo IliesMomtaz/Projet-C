@@ -1,5 +1,5 @@
-##Simulateur de Parking - Langage C
-## Prérequis
+
+## Simulateur de Parking - Langage C
 
 
 Ce jeu est une simulation de stationnement de voitures dans un parking payant, développé en langage C. Il tient compte des déplacement et du stationnement des véhicules sur une map graphique basée sur les séquences ANSI.
